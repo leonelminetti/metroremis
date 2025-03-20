@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Taxímetro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="controls">
+        <div>
+            <label>Tiempo (segundos):</label>
+            <input type="number" id="tiempo" min="1" value="1">
+        </div>
+        <div>
+            <label>Bajada de bandera ($):</label>
+            <input type="number" id="bajadaBandera" min="0" step="0.01" value="50.00">
+        </div>
+        <div>
+            <label>Precio por metro ($):</label>
+            <input type="number" id="precioMetro" min="0" step="0.01" value="0.50">
+        </div>
+        <button onclick="iniciar()">Iniciar</button>
+        <button onclick="finalizar()" id="btnFinalizar" disabled>Finalizar</button>
+        <button onclick="reiniciar()">Reiniciar</button>
+        <div>Distancia en curso: <span id="totalDistancia">0</span> metros</div>
+        <div>Costo en curso: $<span id="costoEnCurso">0.00</span></div>
+    </div>
+    
+    <div id="resultadoFinal" class="resultado-final" style="display: none;">
+        <h2>Total del viaje: <span id="distanciaFinalValor">0</span> metros</h2>
+        <h2>Costo final: $<span id="costoFinalValor">0.00</span></h2>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Punto</th>
+                <th>Latitud</th>
+                <th>Longitud</th>
+                <th>Distancia (m)</th>
+            </tr>
+        </thead>
+        <tbody id="grilla"></tbody>
+    </table>
+
+    <script src="script.js"></script>
+</body>
+</html>
