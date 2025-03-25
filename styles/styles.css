@@ -1,0 +1,235 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #00cc99, #006666);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.page {
+    display: none;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    transition: opacity 0.3s ease;
+}
+
+.page.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Estilos de la pantalla de configuración */
+.controls {
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background: white;
+}
+
+.config-message {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.btn-primary {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    width: 100%;
+    background: white;
+    color: #333;
+    border: 2px solid #800080;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: scale(1.05);
+    background: #f0f0f0;
+}
+
+.icon-taxi {
+    text-align: center;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.icon-taxi:hover {
+    transform: scale(1.1);
+}
+
+.icon-taxi img {
+    width: 100px;
+    height: auto;
+}
+
+/* Estilos de la pantalla principal */
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.top-row {
+    margin-bottom: 20px;
+}
+
+.bottom-row {
+    margin-top: 20px;
+}
+
+.btn-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #333;
+    background: #28a745; /* Verde para Play */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-circle:nth-child(1) {
+    background: #28a745; /* Play */
+}
+
+.btn-circle:nth-child(2) {
+    background: #ffc107; /* Pausa/Reanudar */
+}
+
+.btn-circle:nth-child(3) {
+    background: #dc3545; /* Stop */
+}
+
+.btn-circle:hover:not(:disabled) {
+    transform: scale(1.1);
+}
+
+.btn-circle:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-large {
+    width: 100px;
+    height: 100px;
+}
+
+.status {
+    text-align: center;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.status p {
+    margin: 10px 0;
+    font-size: 1.5em;
+    color: #333;
+    font-weight: bold;
+}
+
+.status span {
+    color: #006600;
+    font-size: 1.6em;
+}
+
+.footer-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.btn-icon-large {
+    padding: 10px;
+}
+
+.btn-icon-large svg {
+    width: 40px;
+    height: 40px;
+}
+
+.btn-icon:hover {
+    transform: scale(1.2);
+}
+
+@media (max-width: 400px) {
+    .page {
+        padding: 15px;
+    }
+    .input-group label {
+        font-size: 1em;
+    }
+    .btn-primary {
+        padding: 10px;
+        font-size: 1em;
+    }
+    .btn-circle {
+        width: 80px;
+        height: 80px;
+    }
+    .btn-large {
+        width: 90px;
+        height: 90px;
+    }
+    .status p {
+        font-size: 1.3em;
+    }
+    .status span {
+        font-size: 1.4em;
+    }
+    .btn-icon-large svg {
+        width: 32px;
+        height: 32px;
+    }
+}

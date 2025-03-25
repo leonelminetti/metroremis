@@ -2,47 +2,82 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taxímetro</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-    <div class="controls">
-        <div>
-            <label>Tiempo (segundos):</label>
-            <input type="number" id="tiempo" min="1" value="1">
+    <!-- Pantalla de Configuración -->
+    <section id="configPage" class="page active">
+        <div class="controls">
+            <div class="input-group">
+                <label for="bajadaBandera">Bajada de bandera ($):</label>
+                <input type="number" id="bajadaBandera" min="0" step="0.01" value="50.00" placeholder="50.00">
+            </div>
+            <div class="input-group">
+                <label for="precioMetro">Precio por metro ($):</label>
+                <input type="number" id="precioMetro" min="0" step="0.01" value="0.50" placeholder="0.50">
+            </div>
+            <div class="input-group">
+                <label for="precioEspera">Costo por hora de espera ($):</label>
+                <input type="number" id="precioEspera" min="0" step="0.01" value="100.00" placeholder="100.00">
+            </div>
+            <div class="input-group">
+                <label for="tiempo">Tiempo (segundos):</label>
+                <input type="number" id="tiempo" min="1" value="1" placeholder="1">
+            </div>
+            <button onclick="guardarConfig()" class="btn btn-primary">Guardar</button>
+            <p id="configMessage" class="config-message"></p>
         </div>
-        <div>
-            <label>Bajada de bandera ($):</label>
-            <input type="number" id="bajadaBandera" min="0" step="0.01" value="50.00">
+        <div class="icon-taxi" onclick="irAPantallaPrincipal()">
+            <img src="assets/viaje-en-coche.png" alt="Icono de taxi" width="100">
         </div>
-        <div>
-            <label>Precio por metro ($):</label>
-            <input type="number" id="precioMetro" min="0" step="0.01" value="0.50">
-        </div>
-        <button onclick="iniciar()">Iniciar</button>
-        <button onclick="finalizar()" id="btnFinalizar" disabled>Finalizar</button>
-        <button onclick="reiniciar()">Reiniciar</button>
-        <div>Distancia en curso: <span id="totalDistancia">0</span> metros</div>
-        <div>Costo en curso: $<span id="costoEnCurso">0.00</span></div>
-    </div>
-    
-    <div id="resultadoFinal" class="resultado-final" style="display: none;">
-        <h2>Total del viaje: <span id="distanciaFinalValor">0</span> metros</h2>
-        <h2>Costo final: $<span id="costoFinalValor">0.00</span></h2>
-    </div>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Punto</th>
-                <th>Latitud</th>
-                <th>Longitud</th>
-                <th>Distancia (m)</th>
-            </tr>
-        </thead>
-        <tbody id="grilla"></tbody>
-    </table>
+    </section>
 
-    <script src="script.js"></script>
+    <!-- Pantalla Principal -->
+    <section id="mainPage" class="page">
+        <div class="buttons">
+            <div class="button-row top-row">
+                <button onclick="iniciar()" id="btnPlay" class="btn btn-circle btn-large">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 3L19 12L5 21V3Z" fill="white"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="button-row bottom-row">
+                <button onclick="pausar()" id="btnPause" class="btn btn-circle btn-large" disabled>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 4H10V20H6V4Z" fill="white"/>
+                        <path d="M14 4H18V20H14V4Z" fill="white"/>
+                    </svg>
+                </button>
+                <button onclick="finalizar()" id="btnStop" class="btn btn-circle btn-large" disabled>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 4H20V20H4V4Z" fill="white"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="status">
+            <p>Metros: <span id="totalDistancia">0</span> m</p>
+            <p>Precio del viaje: $<span id="costoEnCurso">0.00</span></p>
+            <p>Tiempo de viaje: <span id="tiempoViaje">00:00</span> hs</p>
+            <p>Tiempo de espera: <span id="tiempoEspera">00:00</span> hs</p>
+        </div>
+        <div class="footer-buttons">
+            <button onclick="reiniciar()" class="btn btn-icon btn-icon-large">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4V1L8 5L12 9V6C15.31 6 18 8.69 18 12C18 15.31 15.31 18 12 18C8.69 18 6 15.31 6 12H4C4 16.42 7.58 20 12 20C16.42 20 20 16.42 20 12C20 7.58 16.42 4 12 4Z" fill="white"/>
+                </svg>
+            </button>
+            <button onclick="volverAConfig()" class="btn btn-icon btn-icon-large">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z" fill="white"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <script src="script/script.js"></script>
 </body>
 </html>
