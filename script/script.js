@@ -50,21 +50,28 @@ function iniciar() {
     document.getElementById('btnPause').disabled = false;
     document.getElementById('btnStop').disabled = false;
 
-    if (navigator.geolocation) {
-        intervalo = setInterval(registrarPunto, tiempo);
-        intervaloCronometroViaje = setInterval(actualizarCronometroViaje, 1000);
-        registrarPunto();
-    } else {
-        alert("Tu dispositivo no soporta geolocalización.");
+    // Verificar si la geolocalización está disponible
+    if (!navigator.geolocation) {
+        alert("Tu dispositivo o navegador no soporta geolocalización. Por favor, usa un dispositivo compatible.");
         reiniciar();
+        return;
     }
+
+    // Intentar registrar el primer punto
+    registrarPunto();
+    intervalo = setInterval(registrarPunto, tiempo);
+    intervaloCronometroViaje = setInterval(actualizarCronometroViaje, 1000);
 }
 
 function pausar() {
     if (!estaPausado) {
         clearInterval(intervalo);
         clearInterval(intervaloCronometroViaje);
-        intervaloCronometroEspera = setInterval(actualizarCronometroEspera, 1000);
+        intervaloCronometroEspera = setInterval(() => {
+            tiempoEspera++;
+            document.getElementById('tiempoEspera').textContent = formatTiempo(tiempoEspera);
+            actualizarTotales(); // Actualizamos el costo cada segundo mientras está pausado
+        }, 1000);
         document.getElementById('btnPlay').disabled = false;
         document.getElementById('btnPause').innerHTML = `
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,7 +83,7 @@ function pausar() {
         const tiempo = parseInt(document.getElementById('tiempo').value) * 1000;
         intervalo = setInterval(registrarPunto, tiempo);
         intervaloCronometroViaje = setInterval(actualizarCronometroViaje, 1000);
-        document.getElementById('btnPlay').disabled = true;
+        document.getElementById('btnPlay').disabled = false;
         document.getElementById('btnPause').innerHTML = `
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 4H10V20H6V4Z" fill="white"/>
@@ -169,11 +176,26 @@ function registrarPunto() {
             actualizarTotales();
         },
         (error) => {
+            let errorMessage = "Error al obtener la ubicación: ";
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage += "Permiso denegado. Por favor, permite el acceso a la ubicación en tu navegador.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage += "La ubicación no está disponible. Asegúrate de que el GPS esté activado.";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage += "Tiempo de espera agotado. Intenta de nuevo o verifica tu conexión.";
+                    break;
+                default:
+                    errorMessage += "Error desconocido. Código: " + error.code + " - Mensaje: " + error.message;
+                    break;
+            }
+            alert(errorMessage);
             console.error("Error obteniendo ubicación:", error);
-            alert("No se pudo obtener la ubicación.");
-            finalizar();
+            // No finalizamos el viaje automáticamente, permitimos que el usuario intente de nuevo
         },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // Aumentamos el timeout a 10 segundos
     );
 }
 
@@ -203,12 +225,12 @@ function actualizarTotales() {
     const multiplicar = totalDistancia / metrosPorCuadra;
     let costoCuadras = Math.trunc(multiplicar) * precioCuadra;
 
-    // Si el decimal es mayor a 0.3, sumamos una cuadra adicional
-    if (getDecimals(multiplicar) > 0.3) {
+    // Si el decimal es mayor a 0.5, sumamos una cuadra adicional
+    if (getDecimals(multiplicar) > 0.5) {
         costoCuadras += precioCuadra;
     }
 
-    // Calcular el costo por tiempo de espera
+    // Calcular el costo por tiempo de espera (progresivo)
     const costoEspera = (tiempoEspera / 3600) * precioEspera;
 
     // Calcular el costo total
@@ -217,12 +239,6 @@ function actualizarTotales() {
     // Actualizar los valores en la interfaz
     document.getElementById('totalDistancia').textContent = totalDistancia;
     document.getElementById('costoEnCurso').textContent = costoEnCurso;
-}
-
-function actualizarCronometroEspera() {
-    tiempoEspera++;
-    document.getElementById('tiempoEspera').textContent = formatTiempo(tiempoEspera);
-    actualizarTotales();
 }
 
 function actualizarCronometroViaje() {
