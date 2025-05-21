@@ -230,7 +230,7 @@ function actualizarTotales() {
 
     // Calcular el costo por tiempo de espera (progresivo)
     const costoEspera=0; 
-    if((tiempoEspera / 60)>=15){
+    if((tiempoEspera / 60)>=5){
         costoEspera = (tiempoEspera / 3600) * precioEspera;
     }
 
