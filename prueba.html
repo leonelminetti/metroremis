@@ -56,7 +56,7 @@
       const route = e.routes[0];
       const distancia = route.summary.totalDistance; // en metros
       console.log((distancia/100)*95 + 1700);
-      document.getElementById('distancia').textContent = `${distancia.toFixed(0)} m`;
+      document.getElementById('distancia').textContent = `${distancia.toFixed(0)} m ${(distancia/100)*95 + 1700} $`;
     });
   </script>
 </body>
